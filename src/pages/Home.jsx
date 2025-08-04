@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Countdown from "../components/Countdown";
+import PackingList from "../components/PackingList";
+import Itinerary from "../components/Itenerary";
+import Weather from "../components/Weather";
+import CurrencyConverter from "../components/CurrencyConverter";
+import EmergencyInfo from "../components/EmergencyInfo";
 
 const Home = () => {
   const [tripDate, setTripDate] = useState(() => {
@@ -8,7 +14,9 @@ const Home = () => {
     return saved ? new Date(saved) : new Date("2025-12-20");
   });
   const [daysLeft, setDaysLeft] = useState(null);
-  const [city, setCity] = useState(() => localStorage.getItem("city") || "Paris");
+  const [city, setCity] = useState(
+    () => localStorage.getItem("city") || "Paris"
+  );
   const [packingList, setPackingList] = useState(() => {
     const saved = localStorage.getItem("packingList");
     return saved ? JSON.parse(saved) : [];
@@ -20,14 +28,6 @@ const Home = () => {
   const [activeTab, setActiveTab] = useState("countdown");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Scroll to section
-  const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   // Countdown
   useEffect(() => {
     const today = new Date();
@@ -36,7 +36,7 @@ const Home = () => {
     localStorage.setItem("tripDate", tripDate.toISOString());
   }, [tripDate]);
 
-  // Persist packing list
+  // Persist packing list in local storage
   useEffect(() => {
     localStorage.setItem("packingList", JSON.stringify(packingList));
   }, [packingList]);
@@ -44,7 +44,10 @@ const Home = () => {
   // Add item to packing list
   const addPackingItem = () => {
     if (newItem.trim()) {
-      setPackingList((prev) => [...prev, { item: newItem.trim(), packed: false }]);
+      setPackingList((prev) => [
+        ...prev,
+        { item: newItem.trim(), packed: false },
+      ]);
       setNewItem("");
     }
   };
@@ -52,7 +55,9 @@ const Home = () => {
   // Toggle packed status
   const togglePackedItem = (index) => {
     setPackingList((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, packed: !item.packed } : item))
+      prev.map((item, i) =>
+        i === index ? { ...item, packed: !item.packed } : item
+      )
     );
   };
 
@@ -61,7 +66,7 @@ const Home = () => {
     setPackingList((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Weather
+  // Weather on load to persist fetch
   useEffect(() => {
     const fetchWeather = async () => {
       try {
@@ -82,7 +87,7 @@ const Home = () => {
     if (city) fetchWeather();
   }, [city]);
 
-  // Currency
+  // Currency converter
   const convertCurrency = async () => {
     try {
       const apiKey = import.meta.env.VITE_EXCHANGE_API_KEY;
@@ -96,14 +101,19 @@ const Home = () => {
     }
   };
 
-  // Weather icon based on condition
+  // Weather icon based on weather condition
   const getWeatherIcon = (condition) => {
     switch (condition?.toLowerCase()) {
-      case "clear": return "☀️";
-      case "clouds": return "☁️";
-      case "rain": return "🌧️";
-      case "snow": return "❄️";
-      default: return "🌍";
+      case "clear":
+        return "☀️";
+      case "clouds":
+        return "☁️";
+      case "rain":
+        return "🌧️";
+      case "snow":
+        return "❄️";
+      default:
+        return "🌍";
     }
   };
 
@@ -117,14 +127,14 @@ const Home = () => {
           </h1>
           <div className="flex space-x-6 items-center">
             <button
-              onClick={() => scrollToSection("welcome")}
+              // onClick={() => scrollToSection("welcome")}
               className="hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
               aria-label="Go to welcome section"
             >
               Welcome
             </button>
             <button
-              onClick={() => scrollToSection("tools")}
+              // onClick={() => scrollToSection("tools")}
               className="hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
               aria-label="Go to tools section"
             >
@@ -157,7 +167,7 @@ const Home = () => {
         <div className="flex flex-col p-4 space-y-4">
           <button
             onClick={() => {
-              scrollToSection("welcome");
+              // scrollToSection("welcome");
               setIsSidebarOpen(false);
             }}
             className="text-gray-700 hover:text-amber-600 transition-colors"
@@ -166,7 +176,7 @@ const Home = () => {
           </button>
           <button
             onClick={() => {
-              scrollToSection("tools");
+              // scrollToSection("tools");
               setIsSidebarOpen(false);
             }}
             className="text-gray-700 hover:text-amber-600 transition-colors"
@@ -202,7 +212,14 @@ const Home = () => {
       <section id="tools" className="max-w-7xl mx-auto px-6 py-12">
         {/* Tab Navigation */}
         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 mb-8 border-b border-amber-300">
-          {["countdown", "packing", "itinerary", "weather", "currency", "emergency"].map((tab) => (
+          {[
+            "countdown",
+            "packing",
+            "itinerary",
+            "weather",
+            "currency",
+            "emergency",
+          ].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -223,192 +240,71 @@ const Home = () => {
         <div className="bg-white rounded-2xl shadow-lg p-8">
           {/* Countdown */}
           {activeTab === "countdown" && (
-            <div id="countdown-panel" role="tabpanel">
-              <h3 className="text-2xl font-semibold text-amber-600 mb-4">Trip Countdown</h3>
-              <input
-                type="date"
-                className="mb-4 px-4 py-3 rounded-full border border-amber-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm w-full max-w-xs mx-auto"
-                value={tripDate.toISOString().split("T")[0]}
-                onChange={(e) => setTripDate(new Date(e.target.value))}
-                aria-label="Select trip date"
-              />
-              {daysLeft !== null ? (
-                <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-pink-600">
-                  {daysLeft} days to go!
-                </p>
-              ) : (
-                <p className="text-gray-600">Loading...</p>
-              )}
-            </div>
+            <Countdown
+              tripDate={tripDate}
+              setTripDate={setTripDate}
+              daysLeft={daysLeft}
+            />
           )}
 
           {/* Packing List */}
           {activeTab === "packing" && (
-            <div id="packing-panel" role="tabpanel">
-              <h3 className="text-2xl font-semibold text-amber-600 mb-4">Packing List</h3>
-              <div className="flex gap-2 mb-4">
-                <input
-                  type="text"
-                  value={newItem}
-                  onChange={(e) => setNewItem(e.target.value)}
-                  placeholder="Add item"
-                  className="flex-1 px-4 py-3 rounded-full border border-amber-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  aria-label="Add new packing item"
-                />
-                <button
-                  onClick={addPackingItem}
-                  className="bg-amber-600 text-white px-4 py-3 rounded-full hover:bg-amber-700 transition-colors text-sm"
-                  aria-label="Add item to packing list"
-                >
-                  Add
-                </button>
-              </div>
-              <div className="mb-4">
-                <p className="text-sm text-gray-600">
-                  Progress: {packingList.filter((item) => item.packed).length}/{packingList.length}
-                </p>
-                <div className="w-full bg-amber-100 rounded-full h-2 mt-2">
-                  <div
-                    className="bg-amber-600 h-2 rounded-full"
-                    style={{
-                      width: `${(packingList.filter((item) => item.packed).length / packingList.length) * 100}%`,
-                    }}
-                  />
-                </div>
-              </div>
-              <ul className="list-disc ml-5 text-sm text-gray-600">
-                {packingList.map((entry, i) => (
-                  <li key={i} className="flex items-center justify-between mb-2">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={entry.packed}
-                        onChange={() => togglePackedItem(i)}
-                        className="mr-2"
-                        aria-label={`Mark ${entry.item} as packed`}
-                      />
-                      <span className={entry.packed ? "line-through text-gray-400" : ""}>
-                        {entry.item}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => removePackingItem(i)}
-                      className="text-red-500 hover:text-red-600 text-xs"
-                      aria-label={`Remove ${entry.item} from packing list`}
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <PackingList
+              newItem={newItem}
+              setNewItem={setNewItem}
+              addPackingItem={addPackingItem}
+              togglePackedItem={togglePackedItem}
+              removePackingItem={removePackingItem}
+              packingList={packingList}
+            />
           )}
 
           {/* Itinerary */}
-          {activeTab === "itinerary" && (
-            <div id="itinerary-panel" role="tabpanel">
-              <h3 className="text-2xl font-semibold text-amber-600 mb-4">Itinerary</h3>
-              <p className="text-sm text-gray-600">Feature coming soon...</p>
-            </div>
-          )}
+          {activeTab === "itinerary" && <Itinerary />}
 
           {/* Weather */}
           {activeTab === "weather" && (
-            <div id="weather-panel" role="tabpanel">
-              <h3 className="text-2xl font-semibold text-amber-600 mb-4">Weather</h3>
-              <div className="flex gap-2 mb-4">
-                <input
-                  type="text"
-                  value={city}
-                  onChange={(e) => {
-                    setCity(e.target.value);
-                    localStorage.setItem("city", e.target.value);
-                  }}
-                  className="w-full px-4 py-3 rounded-full border border-amber-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  placeholder="Enter city"
-                  aria-label="Enter city for weather"
-                />
-                <button
-                  onClick={() => setCity(city)} // Trigger refetch
-                  className="bg-amber-600 text-white px-4 py-3 rounded-full hover:bg-amber-700 transition-colors text-sm"
-                  aria-label="Refresh weather"
-                >
-                  Refresh
-                </button>
-              </div>
-              {weather ? (
-                weather.error ? (
-                  <p className="text-sm text-red-500">{weather.error}</p>
-                ) : (
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">📍 {city}</p>
-                    <p className="text-2xl font-semibold text-amber-600">
-                      {getWeatherIcon(weather.condition)} {weather.temp}
-                    </p>
-                    <p className="text-sm text-gray-600">{weather.condition}</p>
-                  </div>
-                )
-              ) : (
-                <p className="text-gray-600 text-sm">Loading...</p>
-              )}
-            </div>
+            <Weather
+              city={city}
+              setCity={setCity}
+              weather={weather}
+              getWeatherIcon={getWeatherIcon}
+            />
           )}
 
           {/* Currency Converter */}
           {activeTab === "currency" && (
-            <div id="currency-panel" role="tabpanel">
-              <h3 className="text-2xl font-semibold text-amber-600 mb-4">Currency Converter</h3>
-              <div className="flex gap-2 mb-4">
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="Amount in USD"
-                  className="w-full px-4 py-3 rounded-full border border-amber-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  aria-label="Enter amount in USD"
-                />
-                <button
-                  onClick={convertCurrency}
-                  className="bg-amber-600 text-white px-4 py-3 rounded-full hover:bg-amber-700 transition-colors text-sm"
-                  disabled={!amount || amount <= 0}
-                  aria-label="Convert currency"
-                >
-                  Convert
-                </button>
-              </div>
-              {converted && (
-                <p className="text-sm text-gray-600">EUR: €{converted}</p>
-              )}
-            </div>
+            <CurrencyConverter
+              amount={amount}
+              setAmount={setAmount}
+              convertCurrency={convertCurrency}
+              converted={converted}
+            />
           )}
 
           {/* Emergency Info */}
           {activeTab === "emergency" && (
-            <div id="emergency-panel" role="tabpanel">
-              <h3 className="text-2xl font-semibold text-amber-600 mb-4">Emergency Info</h3>
-              <ul className="text-sm text-gray-600">
-                <li><strong>Emergency:</strong> 112</li>
-                <li><strong>Hotel:</strong> +33 1 23 45 67 89</li>
-                <li><strong>Embassy:</strong> +33 1 43 12 34 56</li>
-              </ul>
-            </div>
+            // </div>
+            <EmergencyInfo />
           )}
         </div>
       </section>
 
       {/* Footer */}
       <footer className="bg-amber-100 px-6 py-8 text-center text-sm text-gray-600">
-        <p>© {new Date().getFullYear()} VoyageVault. Made with 🌎 for travelers.</p>
+        <p>
+          © {new Date().getFullYear()} VoyageVault. Made with 🌎 for travelers.
+        </p>
         <nav className="mt-4 space-x-4">
           <button
-            onClick={() => scrollToSection("welcome")}
+            // onClick={() => scrollToSection("welcome")}
             className="hover:underline"
             aria-label="Go to welcome section"
           >
             Welcome
           </button>
           <button
-            onClick={() => scrollToSection("tools")}
+            // onClick={() => scrollToSection("tools")}
             className="hover:underline"
             aria-label="Go to tools section"
           >

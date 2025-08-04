@@ -1,30 +1,25 @@
 import { useState, useEffect } from "react";
 
-const Countdown = () => {
-  const [tripDate, setTripDate] = useState("2025-12-31");
-  const [daysLeft, setDaysLeft] = useState(null);
-
-  useEffect(() => {
-    const updateCountdown = () => {
-      const today = new Date();
-      const target = new Date(tripDate);
-      const diffTime = target - today;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      setDaysLeft(diffDays);
-    };
-    updateCountdown();
-  }, [tripDate]);
-
+const Countdown = ({tripDate,setTripDate,daysLeft}) => {
   return (
-    <div className="bg-white p-4 rounded-xl shadow">
-      <h2 className="text-xl font-semibold mb-2">📅 Trip Countdown</h2>
+    <div id="countdown-panel" role="tabpanel">
+      <h3 className="text-2xl font-semibold text-amber-600 mb-4">
+        Trip Countdown
+      </h3>
       <input
         type="date"
-        value={tripDate}
-        onChange={(e) => setTripDate(e.target.value)}
-        className="border rounded p-2 mb-2 w-full"
+        className="mb-4 px-4 py-3 rounded-full border border-amber-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm w-full max-w-xs mx-auto"
+        value={tripDate.toISOString().split("T")[0]}
+        onChange={(e) => setTripDate(new Date(e.target.value))}
+        aria-label="Select trip date"
       />
-      <p className="text-lg">{daysLeft !== null ? `${daysLeft} days to go!` : "Set your trip date"}</p>
+      {daysLeft !== null ? (
+        <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-pink-600">
+          {daysLeft} days to go!
+        </p>
+      ) : (
+        <p className="text-gray-600">Loading...</p>
+      )}
     </div>
   );
 };
