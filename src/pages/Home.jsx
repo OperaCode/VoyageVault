@@ -42,15 +42,20 @@ const Home = () => {
   }, [packingList]);
 
   // Add item to packing list
-  const addPackingItem = () => {
-    if (newItem.trim()) {
-      setPackingList((prev) => [
-        ...prev,
-        { item: newItem.trim(), packed: false },
-      ]);
-      setNewItem("");
-    }
-  };
+  // const addPackingItem = () => {
+  //   if (newItem.trim()) {
+  //     setPackingList((prev) => [
+  //       ...prev,
+  //       { item: newItem.trim(), packed: false },
+  //     ]);
+  //     setNewItem("");
+  //   }
+  // };
+
+
+const addPackingItem = (itemObj) => {
+  setPackingList((prev) => [...prev, itemObj]);
+};
 
   // Toggle packed status
   const togglePackedItem = (index) => {
@@ -210,6 +215,7 @@ const Home = () => {
 
       {/* Tools Section */}
       <section id="tools" className="max-w-7xl mx-auto px-6 py-12">
+
         {/* Tab Navigation */}
         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 mb-8 border-b border-amber-300">
           {[
@@ -223,7 +229,7 @@ const Home = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-t-lg text-sm font-semibold ${
+              className={`px-4 py-2 rounded-t-lg text-sm font-semibold cursor-pointer ${
                 activeTab === tab
                   ? "bg-amber-600 text-white"
                   : "bg-white text-amber-600 hover:bg-amber-50"
@@ -256,6 +262,7 @@ const Home = () => {
               togglePackedItem={togglePackedItem}
               removePackingItem={removePackingItem}
               packingList={packingList}
+              setPackingList={setPackingList}
             />
           )}
 
