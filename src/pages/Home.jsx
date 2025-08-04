@@ -214,10 +214,9 @@ const Home = () => {
           <p className="text-lg text-gray-700 mt-2 max-w-2xl mx-auto">
             WanderKit makes travel planning effortless with intuitive tools.
           </p>
-          <button
-            onClick={() => scrollToSection("tools")}
+          <button onClick={() => scrollToSection("tools")}
             className="mt-6 bg-amber-600 text-white px-6 py-3 rounded-full hover:bg-amber-700 transition-colors"
-            aria-label="Quick start with tools"
+            
           >
             Quick Start
           </button>

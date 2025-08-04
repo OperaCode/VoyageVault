@@ -1,87 +1,83 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-const defaultContacts = [
-  { label: "Emergency", number: "112", description: "Europe-wide emergency number" },
-  { label: "Hotel", number: "+33 1 23 45 67 89", description: "Front desk (24/7)" },
-  { label: "Embassy", number: "+33 1 43 12 34 56", description: "Nigerian Embassy in Paris" },
-];
+const storageKey = "emergencyContacts";
 
 const EmergencyInfo = () => {
-  const [contacts, setContacts] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [contacts, setContacts] = useState(() => {
+    try {
+      const stored = localStorage.getItem(storageKey);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
 
-  useEffect(() => {
-    const saved = localStorage.getItem("emergencyContacts");
-    setContacts(saved ? JSON.parse(saved) : defaultContacts);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("emergencyContacts", JSON.stringify(contacts));
-  }, [contacts]);
-
-  const handleChange = (index, key, value) => {
+  const updateContact = (index, field, value) => {
     const updated = [...contacts];
-    updated[index][key] = value;
+    updated[index][field] = value;
     setContacts(updated);
+    localStorage.setItem(storageKey, JSON.stringify(updated));
   };
 
-  const handleSave = () => setEditingIndex(null);
+  const addContact = () => {
+    const newContact = { label: "", number: "", description: "" };
+    const updated = [...contacts, newContact];
+    setContacts(updated);
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+  };
+
+  const removeContact = (index) => {
+    const updated = contacts.filter((_, i) => i !== index);
+    setContacts(updated);
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+  };
 
   return (
     <div id="emergency-panel" role="tabpanel">
-      <h3 className="text-2xl font-semibold text-amber-600 mb-4">Emergency Info</h3>
-      <ul className="space-y-4 text-sm text-gray-700">
+      <h3 className="text-2xl font-semibold text-amber-600 mb-4 flex items-center justify-between">
+        Emergency Info
+        <button
+          onClick={addContact}
+          className="text-sm text-white bg-amber-500 px-2 py-1 rounded hover:bg-amber-600"
+        >
+          + Add
+        </button>
+      </h3>
+      <ul className="space-y-3 text-sm text-gray-700">
         {contacts.map((contact, index) => (
-          <li key={index} className="border-l-4 border-amber-500 pl-4">
-            {editingIndex === index ? (
-              <div className="space-y-1">
-                <input
-                  type="text"
-                  value={contact.label}
-                  onChange={(e) => handleChange(index, "label", e.target.value)}
-                  className="w-full border px-2 py-1 rounded"
-                  placeholder="Label"
-                />
-                <input
-                  type="text"
-                  value={contact.number}
-                  onChange={(e) => handleChange(index, "number", e.target.value)}
-                  className="w-full border px-2 py-1 rounded"
-                  placeholder="Phone Number"
-                />
-                <input
-                  type="text"
-                  value={contact.description}
-                  onChange={(e) => handleChange(index, "description", e.target.value)}
-                  className="w-full border px-2 py-1 rounded"
-                  placeholder="Description"
-                />
-                <button
-                  onClick={handleSave}
-                  className="mt-2 px-3 py-1 bg-amber-600 text-white rounded"
-                >
-                  Save
-                </button>
-              </div>
-            ) : (
-              <>
-                <p>
-                  <strong>{contact.label}:</strong>{" "}
-                  <a href={`tel:${contact.number}`} className="text-blue-600 underline">
-                    {contact.number}
-                  </a>
-                </p>
-                <p className="text-gray-500 text-xs">{contact.description}</p>
-                <button
-                  onClick={() => setEditingIndex(index)}
-                  className="text-xs text-amber-600 mt-1 underline"
-                >
-                  Edit
-                </button>
-              </>
-            )}
+          <li key={index} className="border-l-4 border-amber-500 pl-3 relative">
+            <div className="flex items-center gap-2">
+              <input
+                value={contact.label}
+                onChange={(e) => updateContact(index, "label", e.target.value)}
+                placeholder="Label"
+                className="font-semibold bg-transparent border-b border-dotted border-gray-300 focus:outline-none"
+              />
+              :
+              <input
+                value={contact.number}
+                onChange={(e) => updateContact(index, "number", e.target.value)}
+                placeholder="Phone number"
+                className="text-blue-600 underline bg-transparent border-b border-dotted border-gray-300 focus:outline-none"
+              />
+            </div>
+            <input
+              value={contact.description}
+              onChange={(e) => updateContact(index, "description", e.target.value)}
+              placeholder="Description"
+              className="text-gray-500 text-xs mt-1 bg-transparent border-b border-dotted border-gray-300 focus:outline-none w-full"
+            />
+            <button
+              onClick={() => removeContact(index)}
+              className="absolute top-0 right-0 text-xs text-red-500 hover:underline"
+            >
+              Remove
+            </button>
           </li>
         ))}
+        {contacts.length === 0 && (
+          <p className="text-gray-400 text-sm">No emergency contacts added.</p>
+        )}
       </ul>
     </div>
   );
