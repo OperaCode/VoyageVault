@@ -27,6 +27,9 @@ const Home = () => {
   const [converted, setConverted] = useState(null);
   const [activeTab, setActiveTab] = useState("countdown");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [fromCurrency, setFromCurrency] = useState("USD");
+  const [toCurrency, setToCurrency] = useState("EUR");
+  const [exchangeRate, setExchangeRate] = useState(null);
 
   // Countdown
   useEffect(() => {
@@ -52,10 +55,9 @@ const Home = () => {
   //   }
   // };
 
-
-const addPackingItem = (itemObj) => {
-  setPackingList((prev) => [...prev, itemObj]);
-};
+  const addPackingItem = (itemObj) => {
+    setPackingList((prev) => [...prev, itemObj]);
+  };
 
   // Toggle packed status
   const togglePackedItem = (index) => {
@@ -97,13 +99,22 @@ const addPackingItem = (itemObj) => {
     try {
       const apiKey = import.meta.env.VITE_EXCHANGE_API_KEY;
       const res = await axios.get(
-        `https://v6.exchangerate-api.com/v6/${apiKey}/pair/USD/EUR/${amount}`
+        `https://v6.exchangerate-api.com/v6/${apiKey}/pair/${fromCurrency}/${toCurrency}/${amount}`
       );
       setConverted(res.data.conversion_result.toFixed(2));
+      setExchangeRate(res.data.conversion_rate.toFixed(4));
     } catch (err) {
       console.error("Failed to convert currency", err);
       setConverted(null);
+      setExchangeRate(null);
     }
+  };
+
+  const swapCurrencies = () => {
+    setFromCurrency(toCurrency);
+    setToCurrency(fromCurrency);
+    setConverted(null);
+    setExchangeRate(null);
   };
 
   // Weather icon based on weather condition
@@ -128,7 +139,7 @@ const addPackingItem = (itemObj) => {
       <header className="fixed top-0 left-0 w-full bg-white/95 shadow-md z-50">
         <nav className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-pink-600">
-            🌴 VoyageVault
+            🌴 WanderKit
           </h1>
           <div className="flex space-x-6 items-center">
             <button
@@ -201,7 +212,7 @@ const addPackingItem = (itemObj) => {
             Welcome to Your Next Adventure!
           </h2>
           <p className="text-lg text-gray-700 mt-2 max-w-2xl mx-auto">
-            VoyageVault makes travel planning effortless with intuitive tools.
+            WanderKit makes travel planning effortless with intuitive tools.
           </p>
           <button
             onClick={() => scrollToSection("tools")}
@@ -215,7 +226,6 @@ const addPackingItem = (itemObj) => {
 
       {/* Tools Section */}
       <section id="tools" className="max-w-7xl mx-auto px-6 py-12">
-
         {/* Tab Navigation */}
         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 mb-8 border-b border-amber-300">
           {[
@@ -284,8 +294,14 @@ const addPackingItem = (itemObj) => {
             <CurrencyConverter
               amount={amount}
               setAmount={setAmount}
+              fromCurrency={fromCurrency}
+              toCurrency={toCurrency}
+              setFromCurrency={setFromCurrency}
+              setToCurrency={setToCurrency}
               convertCurrency={convertCurrency}
               converted={converted}
+              exchangeRate={exchangeRate}
+              swapCurrencies={swapCurrencies}
             />
           )}
 
@@ -300,7 +316,7 @@ const addPackingItem = (itemObj) => {
       {/* Footer */}
       <footer className="bg-amber-100 px-6 py-8 text-center text-sm text-gray-600">
         <p>
-          © {new Date().getFullYear()} VoyageVault. Made with 🌎 for travelers.
+          © {new Date().getFullYear()} WanderKit. Made with 🌎 for travelers.
         </p>
         <nav className="mt-4 space-x-4">
           <button

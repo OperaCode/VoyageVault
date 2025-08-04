@@ -9,7 +9,7 @@ const Landing = () => {
       <header className="fixed top-0 left-0 w-full bg-white/95 shadow-md z-50">
         <nav className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-pink-600">
-            🌴 VoyageVault
+            🌴 WanderKit
           </h1>
           <div className="flex space-x-6 items-center">
             <a
@@ -50,7 +50,7 @@ const Landing = () => {
             Explore the World!
           </h2>
           <p className="text-lg md:text-xl mb-8 max-w-2xl text-gray-800">
-            VoyageVault: Your all-in-one app for seamless travel planning and
+            WanderKit: Your all-in-one app for seamless travel planning and
             unforgettable adventures.
           </p>
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
@@ -133,10 +133,10 @@ const Landing = () => {
         <section  className="px-6 py-20 bg-pink-50">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-pink-600">
-              About VoyageVault
+              About WanderKit
             </h2>
             <p className="text-lg text-gray-700">
-              VoyageVault is built for travelers who want stress-free
+              WanderKit is built for travelers who want stress-free
               adventures. Plan, pack, and explore with ease using our intuitive
               tools designed to make every journey unforgettable.
             </p>
@@ -147,7 +147,7 @@ const Landing = () => {
         <section className="px-6 py-20 bg-gradient-to-r from-amber-600 to-pink-600 text-white text-center">
           <h2 className="text-3xl font-bold mb-4">Ready for Your Next Trip?</h2>
           <p className="mb-8 text-lg">
-            Join VoyageVault and start planning your adventure today!
+            Join WanderKit and start planning your adventure today!
           </p>
           <Link
             to="/dashboard"
@@ -161,7 +161,7 @@ const Landing = () => {
       {/* Footer */}
       <footer className="bg-amber-100 px-6 py-8 text-center text-sm text-gray-600 font-bold">
         <p>
-          © {new Date().getFullYear()} VoyageVault. Made for travelers 🌎.
+          © {new Date().getFullYear()} WanderKit. Made for travelers 🌎.
         </p>
         <nav className="mt-4 space-x-4">
           <a
