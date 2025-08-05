@@ -7,6 +7,7 @@ import Itinerary from "../components/Itenerary";
 import Weather from "../components/Weather";
 import CurrencyConverter from "../components/CurrencyConverter";
 import EmergencyInfo from "../components/EmergencyInfo";
+import AiChatBot from "../components/AiChatBot";
 
 const Home = () => {
   const [tripDate, setTripDate] = useState(() => {
@@ -30,6 +31,7 @@ const Home = () => {
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
   const [exchangeRate, setExchangeRate] = useState(null);
+  const [showAI, setShowAI] = useState(false);
 
   // Countdown
   useEffect(() => {
@@ -142,23 +144,23 @@ const Home = () => {
             🌴 WanderKit
           </h1>
           <div className="flex space-x-6 items-center">
-            <button
-              // onClick={() => scrollToSection("welcome")}
-              className="hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
+            <a
+              href="/#welcome"
+              className="font-bold hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
               aria-label="Go to welcome section"
             >
               Welcome
-            </button>
-            <button
-              // onClick={() => scrollToSection("tools")}
-              className="hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
+            </a>
+            {/* <a
+             href="/#modals"
+              className="font-bold hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
               aria-label="Go to tools section"
             >
               Tools
-            </button>
+            </a> */}
             <Link
               to="/"
-              className="bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors"
+              className="font-bold bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors"
               aria-label="Go to landing page"
             >
               Landing
@@ -181,24 +183,20 @@ const Home = () => {
         } sm:hidden`}
       >
         <div className="flex flex-col p-4 space-y-4">
-          <button
-            onClick={() => {
-              // scrollToSection("welcome");
-              setIsSidebarOpen(false);
-            }}
-            className="text-gray-700 hover:text-amber-600 transition-colors"
-          >
-            Welcome
-          </button>
-          <button
-            onClick={() => {
-              // scrollToSection("tools");
-              setIsSidebarOpen(false);
-            }}
-            className="text-gray-700 hover:text-amber-600 transition-colors"
-          >
-            Tools
-          </button>
+          <a
+              href="/#welcome"
+              className="font-bold hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
+              aria-label="Go to welcome section"
+            >
+              Welcome
+            </a>
+            {/* <a
+             href="/#modals"
+              className="font-bold hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
+              aria-label="Go to tools section"
+            >
+              Tools
+            </a> */}
         </div>
       </div>
 
@@ -214,17 +212,33 @@ const Home = () => {
           <p className="text-lg text-gray-700 mt-2 max-w-2xl mx-auto">
             WanderKit makes travel planning effortless with intuitive tools.
           </p>
-          <button onClick={() => scrollToSection("tools")}
-            className="mt-6 bg-amber-600 text-white px-6 py-3 rounded-full hover:bg-amber-700 transition-colors"
-            
-          >
-            Quick Start
-          </button>
+          <div className="mt-6 flex flex-col items-center">
+            <button
+              onClick={() => setShowAI((prev) => !prev)}
+              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded font-semibold transition"
+            >
+              {showAI ? "Close AI Chat 🧠" : "Start with AI 🧠"}
+            </button>
+
+            <div
+              className={`w-full max-w-3xl mt-4 transition-all duration-500 ${
+                showAI
+                  ? "opacity-100 max-h-[1000px]"
+                  : "opacity-0 max-h-0 overflow-hidden"
+              }`}
+            >
+              <div className=" backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-amber-200">
+                <AiChatBot />
+              </div>
+            </div>
+          </div>
         </div>
+
+       
       </section>
 
       {/* Tools Section */}
-      <section id="tools" className="max-w-7xl mx-auto px-6 py-12">
+      <section id="modals" className="max-w-7xl mx-auto px-6 py-12">
         {/* Tab Navigation */}
         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 mb-8 border-b border-amber-300">
           {[
@@ -317,21 +331,21 @@ const Home = () => {
         <p>
           © {new Date().getFullYear()} WanderKit. Made with 🌎 for travelers.
         </p>
-        <nav className="mt-4 space-x-4">
-          <button
-            // onClick={() => scrollToSection("welcome")}
-            className="hover:underline"
-            aria-label="Go to welcome section"
-          >
-            Welcome
-          </button>
-          <button
-            // onClick={() => scrollToSection("tools")}
-            className="hover:underline"
-            aria-label="Go to tools section"
-          >
-            Tools
-          </button>
+        <nav className="mt-4 space-x-4 flex justify-center ">
+          <a
+              href="/#welcome"
+              className="font-bold hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
+              aria-label="Go to welcome section"
+            >
+              Welcome
+            </a>
+            {/* <a
+             href="/#modals"
+              className="font-bold hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
+              aria-label="Go to tools section"
+            >
+              Tools
+            </a> */}
         </nav>
       </footer>
     </div>
