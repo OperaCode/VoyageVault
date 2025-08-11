@@ -151,13 +151,7 @@ const Home = () => {
             >
               Welcome
             </a>
-            {/* <a
-             href="/#modals"
-              className="font-bold hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
-              aria-label="Go to tools section"
-            >
-              Tools
-            </a> */}
+            
             <Link
               to="/"
               className="font-bold bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition-colors"
@@ -242,6 +236,7 @@ const Home = () => {
         {/* Tab Navigation */}
         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 mb-8 border-b border-amber-300">
           {[
+            // "Location",
             "countdown",
             "packing",
             "itinerary",
@@ -339,13 +334,7 @@ const Home = () => {
             >
               Welcome
             </a>
-            {/* <a
-             href="/#modals"
-              className="font-bold hidden sm:block text-gray-700 hover:text-amber-600 transition-colors"
-              aria-label="Go to tools section"
-            >
-              Tools
-            </a> */}
+            
         </nav>
       </footer>
     </div>
